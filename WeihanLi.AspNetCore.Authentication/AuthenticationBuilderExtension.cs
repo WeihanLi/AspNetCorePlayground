@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using System;
+﻿using System;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WeihanLi.AspNetCore.Authentication
 {
@@ -7,13 +7,25 @@ namespace WeihanLi.AspNetCore.Authentication
     {
         public static AuthenticationBuilder AddCustomHeader(this AuthenticationBuilder builder)
         {
-            return builder.AddCustomHeader(_ => { });
+            return builder.AddCustomHeader(HeaderAuthenticationDefaults.HeaderAuthenticationSchema);
+        }
+
+        public static AuthenticationBuilder AddCustomHeader(this AuthenticationBuilder builder, string schema)
+        {
+            return builder.AddCustomHeader(schema, _ => { });
         }
 
         public static AuthenticationBuilder AddCustomHeader(this AuthenticationBuilder builder,
             Action<HeaderAuthenticationOptions> configureOptions)
         {
-            return builder.AddScheme<HeaderAuthenticationOptions, HeaderAuthenticationHandler>(HeaderAuthenticationDefaults.HeaderAuthenticationSchema, "HeaderAuthentication",
+            return builder.AddScheme<HeaderAuthenticationOptions, HeaderAuthenticationHandler>(HeaderAuthenticationDefaults.HeaderAuthenticationSchema,
+                configureOptions);
+        }
+
+        public static AuthenticationBuilder AddCustomHeader(this AuthenticationBuilder builder, string schema,
+            Action<HeaderAuthenticationOptions> configureOptions)
+        {
+            return builder.AddScheme<HeaderAuthenticationOptions, HeaderAuthenticationHandler>(schema,
                 configureOptions);
         }
     }

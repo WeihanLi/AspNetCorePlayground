@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace TestWebApplication.Controllers
 {
@@ -20,11 +20,13 @@ namespace TestWebApplication.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            _logger.LogInformation($"UserName: {User.Identity.Name}");
-            return new string[] { "value1", "value2" };
+            var msg = $"IsAuthenticated: {User.Identity.IsAuthenticated} ,UserName: {User.Identity.Name}";
+            _logger.LogInformation(msg);
+            return new string[] { msg };
         }
 
         // GET api/values/5
+        [Authorize]
         [HttpGet("{id:int}")]
         public ActionResult<string> Get(int id)
         {

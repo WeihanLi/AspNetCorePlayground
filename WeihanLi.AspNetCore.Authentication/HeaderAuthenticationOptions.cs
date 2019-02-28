@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication;
 
 namespace WeihanLi.AspNetCore.Authentication
 {
@@ -56,7 +56,7 @@ namespace WeihanLi.AspNetCore.Authentication
         public string Delimiter
         {
             get => _delimiter;
-            set => _delimiter = string.IsNullOrEmpty(value) ? " " : value;
+            set => _delimiter = string.IsNullOrEmpty(value) ? "," : value;
         }
     }
 }
