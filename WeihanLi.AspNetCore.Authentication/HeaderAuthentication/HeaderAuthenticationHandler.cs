@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace WeihanLi.AspNetCore.Authentication
+namespace WeihanLi.AspNetCore.Authentication.HeaderAuthentication
 {
     public class HeaderAuthenticationHandler : AuthenticationHandler<HeaderAuthenticationOptions>
     {
@@ -16,11 +16,11 @@ namespace WeihanLi.AspNetCore.Authentication
         {
         }
 
-        protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+        protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
             if (!Request.Headers.ContainsKey(Options.UserIdHeaderName) || !Request.Headers.ContainsKey(Options.UserNameHeaderName))
             {
-                return AuthenticateResult.NoResult();
+                return Task.FromResult(AuthenticateResult.NoResult());
             }
             var userId = Request.Headers[Options.UserIdHeaderName].ToString();
             var userName = Request.Headers[Options.UserNameHeaderName].ToString();
@@ -59,7 +59,7 @@ namespace WeihanLi.AspNetCore.Authentication
                 principal,
                 Scheme.Name
             );
-            return AuthenticateResult.Success(ticket);
+            return Task.FromResult(AuthenticateResult.Success(ticket));
         }
     }
 }

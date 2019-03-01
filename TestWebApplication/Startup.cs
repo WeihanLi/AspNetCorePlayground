@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TestWebApplication.Conventions;
 using WeihanLi.AspNetCore.Authentication;
+using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
 
 namespace TestWebApplication
 {
@@ -21,8 +22,10 @@ namespace TestWebApplication
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(HeaderAuthenticationDefaults.HeaderAuthenticationSchema)
-                .AddCustomHeader(HeaderAuthenticationDefaults.HeaderAuthenticationSchema, options => { options.AdditionalHeaderToClaims.Add("UserEmail", ClaimTypes.Email); });
+            services.AddAuthentication(HeaderAuthenticationDefaults.AuthenticationSchema)
+                .AddHeader(HeaderAuthenticationDefaults.AuthenticationSchema, options => { options.AdditionalHeaderToClaims.Add("UserEmail", ClaimTypes.Email); })
+                //.AddQuery(QueryAuthenticationDefaults.AuthenticationSchema, options => { options.AdditionalQueryToClaims.Add("UserEmail", ClaimTypes.Email); })
+                ;
 
             services.AddMvc(options =>
                 {

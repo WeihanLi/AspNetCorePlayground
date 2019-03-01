@@ -1,57 +1,57 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Authentication;
 
-namespace WeihanLi.AspNetCore.Authentication
+namespace WeihanLi.AspNetCore.Authentication.QueryAuthentication
 {
-    public class HeaderAuthenticationOptions : AuthenticationSchemeOptions
+    public class QueryAuthenticationOptions : AuthenticationSchemeOptions
     {
-        private string _userRolesHeaderName = "UserRoles";
-        private string _userNameHeaderName = "UserName";
-        private string _userIdHeaderName = "UserId";
+        private string _userRolesQueryKey = "UserRoles";
+        private string _userNameQueryKey = "UserName";
+        private string _userIdQueryKey = "UserId";
         private string _delimiter = ",";
 
-        public string UserIdHeaderName
+        public string UserIdQueryKey
         {
-            get => _userIdHeaderName;
+            get => _userIdQueryKey;
             set
             {
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    _userIdHeaderName = value;
+                    _userIdQueryKey = value;
                 }
             }
         }
 
-        public string UserNameHeaderName
+        public string UserNameQueryKey
         {
-            get => _userNameHeaderName;
+            get => _userNameQueryKey;
             set
             {
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    _userNameHeaderName = value;
+                    _userNameQueryKey = value;
                 }
             }
         }
 
-        public string UserRolesHeaderName
+        public string UserRolesQueryKey
         {
-            get => _userRolesHeaderName;
+            get => _userRolesQueryKey;
             set
             {
                 if (!string.IsNullOrWhiteSpace(value))
                 {
-                    _userRolesHeaderName = value;
+                    _userRolesQueryKey = value;
                 }
             }
         }
 
         /// <summary>
         /// 自定义其他的 header
-        /// key: headerName
+        /// key: QueryKey
         /// value: claimType
         /// </summary>
-        public Dictionary<string, string> AdditionalHeaderToClaims { get; } = new Dictionary<string, string>();
+        public Dictionary<string, string> AdditionalQueryToClaims { get; } = new Dictionary<string, string>();
 
         public string Delimiter
         {
