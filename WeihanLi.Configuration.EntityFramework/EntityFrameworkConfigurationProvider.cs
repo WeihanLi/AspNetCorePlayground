@@ -6,20 +6,26 @@ namespace WeihanLi.Configuration.EntityFramework
 {
     internal class EntityFrameworkConfigurationProvider : ConfigurationProvider
     {
-        private readonly ConfigurationsDbContext _dbContext;
+        private readonly DbContextOptions<ConfigurationsDbContext> _dbContextOptions;
 
-        public EntityFrameworkConfigurationProvider(ConfigurationsDbContext dbContext) => _dbContext = dbContext;
+        public EntityFrameworkConfigurationProvider(DbContextOptions<ConfigurationsDbContext> dbContextOptions)
+        {
+            _dbContextOptions = dbContextOptions;
+        }
 
         public override void Load()
         {
-            var configurations = _dbContext.Configurations.AsNoTracking()
-                .ToArray();
-            if (configurations.Length == 0)
-                return;
-
-            foreach (var configuration in configurations)
+            using (var dbContext = new ConfigurationsDbContext(_dbContextOptions))
             {
-                Data[configuration.Key] = configuration.Value;
+                var configurations = dbContext.Configurations.AsNoTracking()
+                    .ToArray();
+                if (configurations.Length == 0)
+                    return;
+
+                foreach (var configuration in configurations)
+                {
+                    Data[configuration.Key] = configuration.Value;
+                }
             }
         }
     }

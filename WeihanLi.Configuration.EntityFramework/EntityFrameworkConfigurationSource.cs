@@ -1,16 +1,24 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace WeihanLi.Configuration.EntityFramework
 {
-    public class EntityFrameworkConfigurationSource : IConfigurationSource
+    internal class EntityFrameworkConfigurationSource : IConfigurationSource
     {
-        public IServiceCollection Services { get; set; }
+        private readonly Action<DbContextOptionsBuilder<ConfigurationsDbContext>> _action;
+
+        public EntityFrameworkConfigurationSource(Action<DbContextOptionsBuilder<ConfigurationsDbContext>> action)
+        {
+            _action = action;
+        }
+
+        private readonly DbContextOptionsBuilder<ConfigurationsDbContext> DbContextOptionsBuilder = new DbContextOptionsBuilder<ConfigurationsDbContext>();
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            var serviceProvider = Services?.BuildServiceProvider();
-            return new EntityFrameworkConfigurationProvider(serviceProvider.GetService<ConfigurationsDbContext>());
+            _action.Invoke(DbContextOptionsBuilder);
+            return new EntityFrameworkConfigurationProvider(DbContextOptionsBuilder.Options);
         }
     }
 }

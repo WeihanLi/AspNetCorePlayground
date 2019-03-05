@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using WeihanLi.Configuration.EntityFramework;
 
 namespace TestWebApplication
 {
@@ -12,6 +14,11 @@ namespace TestWebApplication
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration(configBuilder =>
+                {
+                    var configuration = configBuilder.Build();
+                    configBuilder.AddEntityFramework(config => config.UseInMemoryDatabase("Configurations"));
+                })
                 .UseStartup<Startup>();
     }
 }

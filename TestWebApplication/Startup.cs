@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestWebApplication.Conventions;
 using WeihanLi.AspNetCore.Authentication;
 using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
@@ -43,11 +43,6 @@ namespace TestWebApplication
                 options.DefaultApiVersion = ApiVersion.Default;
             });
 
-            services.AddDbContext<ConfigurationsDbContext>(options =>
-                {
-                    options.UseSqlServer(Configuration.GetConnectionString("Configurations"));
-                });
-
             services.AddRedisConfig(config =>
             {
                 config.EnableCompress = false;
@@ -55,19 +50,18 @@ namespace TestWebApplication
                 config.DefaultDatabase = 2;
             });
             var configuration = new ConfigurationBuilder()
+                .AddConfiguration(Configuration)
                 .AddRedis(action =>
                 {
                     action.Services = services;
                     action.RedisConfigurationKey = "Configurations";
                 })
-                .AddEntityFramework(config =>
-                {
-                    config.Services = services;
-                })
                 .Build();
 
             var rootUser = configuration["RootUser"];
             var conn = configuration.GetConnectionString("Abcd");
+
+            services.Replace(ServiceDescriptor.Singleton<IConfiguration>(configuration)); // services.AddSingleton<IConfiguration>(configuration);
 
             Configuration = configuration;
         }
