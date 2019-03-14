@@ -17,8 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\WeihanLi.AspNetCore.Authentication\WeihanLi.AspNetCore.Authentication.csproj" />
-    <ProjectReference Include="..\WeihanLi.Configuration.EntityFramework\WeihanLi.Configuration.EntityFramework.csproj" />
-    <ProjectReference Include="..\WeihanLi.Configuration.Redis\WeihanLi.Configuration.Redis.csproj" />
+    <ProjectReference Include="..\WeihanLi.Configuration\WeihanLi.Configuration.EntityFramework\WeihanLi.Configuration.EntityFramework.csproj" />
+    <ProjectReference Include="..\WeihanLi.Configuration\WeihanLi.Configuration.Redis\WeihanLi.Configuration.Redis.csproj" />
   </ItemGroup>
 
 </Project>

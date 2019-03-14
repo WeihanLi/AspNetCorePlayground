@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebApplication", "TestW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeihanLi.AspNetCore.Authentication", "WeihanLi.AspNetCore.Authentication\WeihanLi.AspNetCore.Authentication.csproj", "{9933DAAF-A061-40C0-88F2-3E34AA011615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeihanLi.Configuration.Redis", "WeihanLi.Configuration.Redis\WeihanLi.Configuration.Redis.csproj", "{7934487B-1771-4F22-834C-4FA62C44E3EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeihanLi.Configuration.Redis", "WeihanLi.Configuration\WeihanLi.Configuration.Redis\WeihanLi.Configuration.Redis.csproj", "{7934487B-1771-4F22-834C-4FA62C44E3EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeihanLi.Configuration.EntityFramework", "WeihanLi.Configuration.EntityFramework\WeihanLi.Configuration.EntityFramework.csproj", "{99311A9D-3DD1-476F-BAE3-8C5469BC2E5C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeihanLi.Configuration.EntityFramework", "WeihanLi.Configuration\WeihanLi.Configuration.EntityFramework\WeihanLi.Configuration.EntityFramework.csproj", "{99311A9D-3DD1-476F-BAE3-8C5469BC2E5C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
