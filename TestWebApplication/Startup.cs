@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestWebApplication.Conventions;
 using WeihanLi.AspNetCore.Authentication;
 using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
-using WeihanLi.Configuration.EntityFramework;
 using WeihanLi.Configuration.Redis;
 using WeihanLi.Redis;
 
@@ -58,6 +57,7 @@ namespace TestWebApplication
                 })
                 .Build();
 
+            // testConfiguration
             var rootUser = configuration["RootUser"];
             var conn = configuration.GetConnectionString("Abcd");
 

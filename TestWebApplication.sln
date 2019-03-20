@@ -7,9 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestWebApplication", "TestW
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeihanLi.AspNetCore.Authentication", "WeihanLi.AspNetCore.Authentication\WeihanLi.AspNetCore.Authentication.csproj", "{9933DAAF-A061-40C0-88F2-3E34AA011615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeihanLi.Configuration.Redis", "WeihanLi.Configuration\WeihanLi.Configuration.Redis\WeihanLi.Configuration.Redis.csproj", "{7934487B-1771-4F22-834C-4FA62C44E3EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeihanLi.Configuration.Redis", "WeihanLi.Configuration\WeihanLi.Configuration.Redis\WeihanLi.Configuration.Redis.csproj", "{7934487B-1771-4F22-834C-4FA62C44E3EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeihanLi.Configuration.EntityFramework", "WeihanLi.Configuration\WeihanLi.Configuration.EntityFramework\WeihanLi.Configuration.EntityFramework.csproj", "{99311A9D-3DD1-476F-BAE3-8C5469BC2E5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeihanLi.Configuration.EntityFramework", "WeihanLi.Configuration\WeihanLi.Configuration.EntityFramework\WeihanLi.Configuration.EntityFramework.csproj", "{99311A9D-3DD1-476F-BAE3-8C5469BC2E5C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeihanLi.Ocelot.ConfigurationProvider.EntityFramework", "WeihanLi.Ocelot.ConfigurationProviders\WeihanLi.Ocelot.ConfigurationProvider.EntityFramework\WeihanLi.Ocelot.ConfigurationProvider.EntityFramework.csproj", "{588F019E-6AA4-4D60-8392-34E5036F49AF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WeihanLi.Ocelot.ConfigurationProvider.Redis", "WeihanLi.Ocelot.ConfigurationProviders\WeihanLi.Ocelot.ConfigurationProvider.Redis\WeihanLi.Ocelot.ConfigurationProvider.Redis.csproj", "{7C31A417-A4A7-4AA1-BC18-B42975EF5C86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestGateway", "TestGateway\TestGateway.csproj", "{8A8AEFAF-C152-46D1-893D-42BEC306DD28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +39,18 @@ Global
 		{99311A9D-3DD1-476F-BAE3-8C5469BC2E5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99311A9D-3DD1-476F-BAE3-8C5469BC2E5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99311A9D-3DD1-476F-BAE3-8C5469BC2E5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{588F019E-6AA4-4D60-8392-34E5036F49AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{588F019E-6AA4-4D60-8392-34E5036F49AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{588F019E-6AA4-4D60-8392-34E5036F49AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{588F019E-6AA4-4D60-8392-34E5036F49AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C31A417-A4A7-4AA1-BC18-B42975EF5C86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C31A417-A4A7-4AA1-BC18-B42975EF5C86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C31A417-A4A7-4AA1-BC18-B42975EF5C86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C31A417-A4A7-4AA1-BC18-B42975EF5C86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A8AEFAF-C152-46D1-893D-42BEC306DD28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A8AEFAF-C152-46D1-893D-42BEC306DD28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A8AEFAF-C152-46D1-893D-42BEC306DD28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A8AEFAF-C152-46D1-893D-42BEC306DD28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
