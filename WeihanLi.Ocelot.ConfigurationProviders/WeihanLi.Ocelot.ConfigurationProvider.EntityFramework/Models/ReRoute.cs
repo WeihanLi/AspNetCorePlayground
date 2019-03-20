@@ -1,4 +1,4 @@
-﻿namespace Ocelot.ConfigurationProvider.EntityFramework.Models
+﻿namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework.Models
 {
     /// <summary>
     /// 路由配置项

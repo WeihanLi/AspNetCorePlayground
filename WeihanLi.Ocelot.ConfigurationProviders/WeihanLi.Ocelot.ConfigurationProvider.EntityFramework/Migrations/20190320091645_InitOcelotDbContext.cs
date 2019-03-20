@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Ocelot.ConfigurationProvider.EntityFramework.Migrations
+namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework.Migrations
 {
     public partial class InitOcelotDbContext : Migration
     {

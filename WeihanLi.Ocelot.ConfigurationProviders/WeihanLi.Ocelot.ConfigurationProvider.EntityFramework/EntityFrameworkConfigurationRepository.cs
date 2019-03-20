@@ -7,10 +7,10 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using Ocelot.Configuration.File;
 using Ocelot.Configuration.Repository;
-using Ocelot.ConfigurationProvider.EntityFramework.Models;
 using Ocelot.Responses;
+using WeihanLi.Ocelot.ConfigurationProvider.EntityFramework.Models;
 
-namespace Ocelot.ConfigurationProvider.EntityFramework
+namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework
 {
     internal class EntityFrameworkConfigurationRepository : IFileConfigurationRepository
     {

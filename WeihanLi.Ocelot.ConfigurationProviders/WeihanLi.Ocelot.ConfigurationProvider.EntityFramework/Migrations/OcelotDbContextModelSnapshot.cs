@@ -2,17 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Ocelot.ConfigurationProvider.EntityFramework;
+using WeihanLi.Ocelot.ConfigurationProvider.EntityFramework;
 
-namespace Ocelot.ConfigurationProvider.EntityFramework.Migrations
+namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework.Migrations
 {
     [DbContext(typeof(OcelotDbContext))]
-    [Migration("20190320091645_InitOcelotDbContext")]
-    partial class InitOcelotDbContext
+    partial class OcelotDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

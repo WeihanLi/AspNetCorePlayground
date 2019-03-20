@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Ocelot.ConfigurationProvider.EntityFramework.Models
+namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework.Models
 {
     /// <summary>
     /// Ocelot配置主表

@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Ocelot.Configuration.Repository;
-using Ocelot.ConfigurationProvider.EntityFramework;
+using WeihanLi.Ocelot.ConfigurationProvider.EntityFramework;
 
 // ReSharper disable once CheckNamespace
 namespace Ocelot.DependencyInjection

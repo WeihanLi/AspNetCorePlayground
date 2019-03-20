@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Ocelot.ConfigurationProvider.EntityFramework.Models;
+using WeihanLi.Ocelot.ConfigurationProvider.EntityFramework.Models;
 
-namespace Ocelot.ConfigurationProvider.EntityFramework
+namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework
 {
     public class OcelotDbContext : DbContext
     {
