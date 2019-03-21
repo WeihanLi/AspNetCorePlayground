@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Ocelot.Configuration.File;
 using Ocelot.Configuration.Repository;
@@ -14,12 +15,12 @@ namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework
 {
     internal class EntityFrameworkConfigurationRepository : IFileConfigurationRepository
     {
-        private readonly OcelotDbContext _context;
+        private readonly IServiceProvider _serviceProvider;
         internal static int SpecificConfigurationId = -1;
 
-        public EntityFrameworkConfigurationRepository(OcelotDbContext dbContext)
+        public EntityFrameworkConfigurationRepository(IServiceProvider serviceProvider)
         {
-            _context = dbContext;
+            _serviceProvider = serviceProvider;
         }
 
         public async Task<Response<FileConfiguration>> Get()
@@ -29,17 +30,25 @@ namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework
             {
                 expression = c => c.IsEnabled && c.Id == SpecificConfigurationId;
             }
-            var configuration = await _context.OcelotConfigurations
-                .OrderByDescending(_ => _.Id)
-                .FirstOrDefaultAsync(expression);
 
-            if (configuration == null)
-                return new OkResponse<FileConfiguration>(new FileConfiguration());
+            OcelotConfiguration configuration;
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                using (var context = scope.ServiceProvider.GetRequiredService<OcelotDbContext>())
+                {
+                    configuration = await context.OcelotConfigurations
+                        .OrderByDescending(_ => _.Id)
+                        .FirstOrDefaultAsync(expression);
 
-            configuration.GlobalConfiguration =
-                await _context.GlobalConfigurations.FirstOrDefaultAsync(_ => _.ConfigurationId == configuration.Id) ?? new GlobalConfiguration();
-            configuration.ReRoutes =
-                await _context.ReRoutes.Where(_ => _.ConfigurationId == configuration.Id).ToListAsync();
+                    if (configuration == null)
+                        return new OkResponse<FileConfiguration>(new FileConfiguration());
+
+                    configuration.GlobalConfiguration =
+                        await context.GlobalConfigurations.FirstOrDefaultAsync(_ => _.ConfigurationId == configuration.Id) ?? new GlobalConfiguration();
+                    configuration.ReRoutes =
+                        await context.ReRoutes.Where(_ => _.ConfigurationId == configuration.Id).ToListAsync();
+                }
+            }
 
             var fileConfiguration = new FileConfiguration()
             {
@@ -104,7 +113,6 @@ namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework
             }
             return new OkResponse<FileConfiguration>(fileConfiguration);
         }
-
         public Task<Response> Set(FileConfiguration fileConfiguration)
         {
             return Task.FromResult((Response)new OkResponse());

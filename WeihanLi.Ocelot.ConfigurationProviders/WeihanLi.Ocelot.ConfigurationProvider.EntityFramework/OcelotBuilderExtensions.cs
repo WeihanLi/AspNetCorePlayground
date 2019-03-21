@@ -21,7 +21,7 @@ namespace Ocelot.DependencyInjection
             EntityFrameworkConfigurationRepository.SpecificConfigurationId = configurationId;
 
             builder.Services.AddDbContextPool<OcelotDbContext>(optionsAction, poolSize: 64); // dbContextPool size tip https://www.cnblogs.com/dudu/p/10398225.html
-            builder.Services.AddScoped<IFileConfigurationRepository, EntityFrameworkConfigurationRepository>();
+            builder.Services.AddSingleton<IFileConfigurationRepository, EntityFrameworkConfigurationRepository>();
 
             return builder;
         }
