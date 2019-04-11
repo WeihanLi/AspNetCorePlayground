@@ -14,7 +14,7 @@ namespace WeihanLi.Configuration.Redis
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
             var serviceProvider = Services.BuildServiceProvider();
-            var option = serviceProvider.GetRequiredService<IOptions<RedisConfigurationOption>>();
+            var option = serviceProvider.GetRequiredService<IOptions<RedisConfigurationOptions>>();
             var hashClient = serviceProvider.GetRequiredService<IHashClient>();
             return new RedisConfigurationProvider(hashClient, option);
         }

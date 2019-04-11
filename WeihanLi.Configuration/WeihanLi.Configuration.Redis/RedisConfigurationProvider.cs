@@ -8,16 +8,16 @@ namespace WeihanLi.Configuration.Redis
     internal class RedisConfigurationProvider : ConfigurationProvider
     {
         private readonly IHashClient _hashClient;
-        private readonly RedisConfigurationOption _redisOptions;
+        private readonly RedisConfigurationOptions _redisOptions;
         private readonly string _configurationHashKey = "Configurations";
 
-        public RedisConfigurationProvider(IHashClient hashClient, IOptions<RedisConfigurationOption> redisOptions)
+        public RedisConfigurationProvider(IHashClient hashClient, IOptions<RedisConfigurationOptions> redisOptions)
         {
             _hashClient = hashClient;
             _redisOptions = redisOptions.Value;
         }
 
-        public RedisConfigurationProvider(IHashClient hashClient, IOptions<RedisConfigurationOption> redisOptions, string configurationKey)
+        public RedisConfigurationProvider(IHashClient hashClient, IOptions<RedisConfigurationOptions> redisOptions, string configurationKey)
         {
             _hashClient = hashClient;
             _redisOptions = redisOptions.Value;
