@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using WeihanLi.Configuration.EntityFramework;
+using Microsoft.Extensions.Configuration;
 
 namespace TestWebApplication
 {
@@ -16,8 +15,7 @@ namespace TestWebApplication
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(configBuilder =>
                 {
-                    var configuration = configBuilder.Build();
-                    configBuilder.AddEntityFramework(config => config.UseInMemoryDatabase("Configurations"));
+                    configBuilder.AddJsonFile("abc.json", true, false);
                 })
                 .UseStartup<Startup>();
     }

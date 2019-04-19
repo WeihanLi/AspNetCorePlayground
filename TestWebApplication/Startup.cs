@@ -8,8 +8,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestWebApplication.Conventions;
 using WeihanLi.AspNetCore.Authentication;
 using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
-using WeihanLi.Configuration.Redis;
-using WeihanLi.Redis;
 
 namespace TestWebApplication
 {
@@ -42,28 +40,28 @@ namespace TestWebApplication
                 options.DefaultApiVersion = ApiVersion.Default;
             });
 
-            services.AddRedisConfig(config =>
-            {
-                config.EnableCompress = false;
-                config.CachePrefix = "AspNetCorePlayground";
-                config.DefaultDatabase = 2;
-            });
-            var configuration = new ConfigurationBuilder()
-                .AddConfiguration(Configuration)
-                .AddRedis(action =>
-                {
-                    action.Services = services;
-                    action.RedisConfigurationKey = "Configurations";
-                })
-                .Build();
+            //services.AddRedisConfig(config =>
+            //{
+            //    config.EnableCompress = false;
+            //    config.CachePrefix = "AspNetCorePlayground";
+            //    config.DefaultDatabase = 2;
+            //});
+            //var configuration = new ConfigurationBuilder()
+            //    .AddConfiguration(Configuration)
+            //    .AddRedis(action =>
+            //    {
+            //        action.Services = services;
+            //        action.RedisConfigurationKey = "Configurations";
+            //    })
+            //    .Build();
 
-            // testConfiguration
-            var rootUser = configuration["RootUser"];
-            var conn = configuration.GetConnectionString("Abcd");
+            //// testConfiguration
+            //var rootUser = configuration["RootUser"];
+            //var conn = configuration.GetConnectionString("Abcd");
 
-            services.Replace(ServiceDescriptor.Singleton<IConfiguration>(configuration)); // services.AddSingleton<IConfiguration>(configuration);
+            //services.Replace(ServiceDescriptor.Singleton<IConfiguration>(configuration)); // services.AddSingleton<IConfiguration>(configuration);
 
-            Configuration = configuration;
+            //Configuration = configuration;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
