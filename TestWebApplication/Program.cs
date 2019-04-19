@@ -15,7 +15,7 @@ namespace TestWebApplication
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(configBuilder =>
                 {
-                    configBuilder.AddJsonFile("abc.json", true, false);
+                    configBuilder.AddJsonFile("abc.json", optional: true, reloadOnChange: false);
                 })
                 .UseStartup<Startup>();
     }
