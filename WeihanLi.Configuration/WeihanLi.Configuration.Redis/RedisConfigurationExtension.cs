@@ -6,7 +6,7 @@ namespace WeihanLi.Configuration.Redis
     public static class RedisConfigurationExtension
     {
         /// <summary>
-        /// Adds an <see cref="IConfigurationProvider"/> that reads configuration values from environment variables.
+        /// Adds an <see cref="IConfigurationProvider"/> that reads configuration values from redis
         /// </summary>
         /// <param name="builder">The <see cref="IConfigurationBuilder"/> to add to.</param>
         /// <param name="configureSource">Configures the source.</param>

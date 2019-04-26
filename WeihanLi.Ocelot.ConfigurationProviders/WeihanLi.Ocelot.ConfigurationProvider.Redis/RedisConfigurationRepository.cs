@@ -30,7 +30,7 @@ namespace WeihanLi.Ocelot.ConfigurationProvider.Redis
 
         public async Task<Response> Set(FileConfiguration fileConfiguration)
         {
-            await _cacheClient.SetAsync(_redisFileConfigurationOptions.CacheName, fileConfiguration, _redisFileConfigurationOptions.DefaultExpiresIn);
+            await _cacheClient.SetAsync(_redisFileConfigurationOptions.CacheName, fileConfiguration);
             return new OkResponse();
         }
     }
