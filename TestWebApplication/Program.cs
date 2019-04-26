@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using WeihanLi.Configuration.Redis;
-using WeihanLi.Redis;
+using Microsoft.Extensions.Configuration;
 
 namespace TestWebApplication
 {
@@ -14,16 +13,9 @@ namespace TestWebApplication
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .ConfigureServices((context, services) => services.AddRedisConfig(options =>
+                .ConfigureAppConfiguration(configBuilder =>
                 {
-                }))
-                .ConfigureAppConfiguration((context, configBuilder) =>
-                {
-                    //var configuration = configBuilder.Build();
-                    //configBuilder.AddEntityFramework(config => config.UseInMemoryDatabase("Configurations"));
-                    configBuilder.AddRedis(action =>
-                    {
-                    });
+                    configBuilder.AddJsonFile("abc.json", optional: true, reloadOnChange: false);
                 })
                 .UseStartup<Startup>();
     }

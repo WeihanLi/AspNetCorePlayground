@@ -18,7 +18,7 @@ namespace TestWebApplication.Controllers
         {
             return Ok(new
             {
-                RootUser = _configuration["RootUser"]
+                RootUser = _configuration.GetAppSetting("RootUser")
             });
         }
 
