@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestWebApplication.Conventions;
+using TestWebApplication.Extensions;
 using WeihanLi.AspNetCore.Authentication;
 using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
 
@@ -71,6 +72,8 @@ namespace TestWebApplication
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseHealthCheck();
 
             app.UseAuthentication();
             app.UseMvc();

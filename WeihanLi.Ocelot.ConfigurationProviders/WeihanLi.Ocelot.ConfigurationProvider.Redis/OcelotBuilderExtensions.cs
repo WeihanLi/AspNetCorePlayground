@@ -30,7 +30,7 @@ namespace WeihanLi.Ocelot.ConfigurationProvider.Redis
             {
                 builder.Services.Configure(optionsAction);
             }
-            builder.Services.AddSingleton<IFileConfigurationRepository, RedisFileConfigurationRepository>();
+            builder.StoreConfigurationInRedis();
             return builder;
         }
     }

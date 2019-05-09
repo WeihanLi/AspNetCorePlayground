@@ -20,11 +20,9 @@ namespace WeihanLi.Ocelot.ConfigurationProvider.Redis
 
         public async Task<Response<FileConfiguration>> Get()
         {
-            var fileConfiguration = await _cacheClient.GetAsync<FileConfiguration>(_redisFileConfigurationOptions.CacheName);
-            if (null == fileConfiguration)
-            {
-                fileConfiguration = new FileConfiguration();
-            }
+            var cache = await _cacheClient.GetAsync(_redisFileConfigurationOptions.CacheName);
+            var fileConfiguration = await _cacheClient.GetAsync<FileConfiguration>(_redisFileConfigurationOptions.CacheName) ??
+                                    new FileConfiguration();
             return new OkResponse<FileConfiguration>(fileConfiguration);
         }
 
