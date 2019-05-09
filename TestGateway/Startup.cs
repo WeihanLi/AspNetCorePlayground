@@ -39,6 +39,9 @@ namespace TestGateway
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOcelot()
+                .StoreConfigurationInRedis();
+
             services.AddRedisConfig(options =>
             {
                 options.RedisServers = new[]
@@ -48,18 +51,15 @@ namespace TestGateway
                 options.DefaultDatabase = 2;
                 options.CachePrefix = "AspNetCorePlayground";
             });
-            services.AddOcelot()
-                .StoreConfigurationInRedis();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ICacheClient cacheClient)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            TestGetCache(cacheClient);
 
             #region 更新 Ocelot 配置接口
 
@@ -131,12 +131,6 @@ namespace TestGateway
                     });
                 })
                 .Wait();
-        }
-
-        private void TestGetCache(ICacheClient cacheClient)
-        {
-            var cache = cacheClient.Get("OcelotConfigurations");
-            cache = cacheClient.GetAsync("OcelotConfigurations").Result;
         }
     }
 }
