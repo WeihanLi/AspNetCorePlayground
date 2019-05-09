@@ -51,6 +51,8 @@ namespace TestGateway
                 options.DefaultDatabase = 2;
                 options.CachePrefix = "AspNetCorePlayground";
             });
+
+            WeihanLi.Common.DependencyResolver.SetDependencyResolver(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -123,8 +125,8 @@ namespace TestGateway
                     // cors headers
                     ocelotBuilder.Use(async (context, next) =>
                     {
-                        var allowedOrigins = Configuration.GetAppSetting("AllowedOrigins");
-                        context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlAllowOrigin, allowedOrigins.SplitArray<string>()));
+                        var allowedOrigins = Configuration.GetAppSetting("AllowedOrigins").SplitArray<string>();
+                        context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlAllowOrigin, allowedOrigins.Length == 0 ? new[] { "*" } : allowedOrigins));
                         context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlAllowHeaders, new[] { "*" }));
                         context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlRequestMethod, new[] { "*" }));
                         await next();
