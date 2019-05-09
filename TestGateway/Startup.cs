@@ -108,7 +108,7 @@ namespace TestGateway
                     // It also sets the Request Id if anything is set globally
                     ocelotBuilder.UseExceptionHandlerMiddleware();
                     // Allow the user to respond with absolutely anything they want.
-                    if (pipelineConfiguration != null)
+                    if (pipelineConfiguration.PreErrorResponderMiddleware != null)
                     {
                         ocelotBuilder.Use(pipelineConfiguration.PreErrorResponderMiddleware);
                     }
