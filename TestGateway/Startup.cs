@@ -51,8 +51,6 @@ namespace TestGateway
                 options.DefaultDatabase = 2;
                 options.CachePrefix = "AspNetCorePlayground";
             });
-
-            WeihanLi.Common.DependencyResolver.SetDependencyResolver(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
