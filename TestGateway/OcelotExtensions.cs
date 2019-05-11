@@ -25,6 +25,15 @@ namespace TestGateway
             Action<IOcelotPipelineBuilder, OcelotPipelineConfiguration> builderAction)
             => UseOcelot(app, builderAction, new OcelotPipelineConfiguration());
 
+        public static Task<IApplicationBuilder> UseOcelot(this IApplicationBuilder app,
+            Action<OcelotPipelineConfiguration> pipelineConfigurationAction,
+            Action<IOcelotPipelineBuilder, OcelotPipelineConfiguration> builderAction)
+        {
+            var pipelineConfiguration = new OcelotPipelineConfiguration();
+            pipelineConfigurationAction?.Invoke(pipelineConfiguration);
+            return UseOcelot(app, builderAction, pipelineConfiguration);
+        }
+
         public static async Task<IApplicationBuilder> UseOcelot(this IApplicationBuilder app, Action<IOcelotPipelineBuilder, OcelotPipelineConfiguration> builderAction, OcelotPipelineConfiguration configuration)
         {
             var internalConfiguration = await CreateConfiguration(app); // initConfiguration

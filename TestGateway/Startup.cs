@@ -123,9 +123,9 @@ namespace TestGateway
                     // cors headers
                     ocelotBuilder.Use(async (context, next) =>
                     {
-                        var allowedOrigins = Configuration.GetAppSetting("AllowedOrigins").SplitArray<string>();
                         if (!context.DownstreamResponse.Headers.Exists(h => h.Key == HeaderNames.AccessControlAllowOrigin))
                         {
+                            var allowedOrigins = Configuration.GetAppSetting("AllowedOrigins").SplitArray<string>();
                             context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlAllowOrigin, allowedOrigins.Length == 0 ? new[] { "*" } : allowedOrigins));
                             context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlAllowHeaders, new[] { "*" }));
                             context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlRequestMethod, new[] { "*" }));
