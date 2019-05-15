@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using System.Data.SqlClient;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using TestWebApplication.Conventions;
 using TestWebApplication.Extensions;
 using WeihanLi.AspNetCore.Authentication;
 using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
+using WeihanLi.Extensions;
 
 namespace TestWebApplication
 {
@@ -73,7 +75,17 @@ namespace TestWebApplication
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHealthCheck();
+            app.UseHealthCheck("/health", serviceProvider =>
+                {
+                    // 检查数据库访问是否正常
+                    var configuration = serviceProvider.GetService<IConfiguration>();
+                    var connString = configuration.GetConnectionString("Configurations");
+                    using (var conn = new SqlConnection(connString))
+                    {
+                        conn.EnsureOpen();
+                    }
+                    return true;
+                });
 
             app.UseAuthentication();
             app.UseMvc();
