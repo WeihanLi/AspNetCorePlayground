@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using WeihanLi.Extensions;
 
 namespace TestWebApplication.Extensions
 {
@@ -45,19 +44,18 @@ namespace TestWebApplication.Extensions
             {
                 checkFunc = serviceProvider => Task.FromResult(true);
             }
-
             applicationBuilder.Map(path, builder => builder.Use(
                 async (context, next) =>
                 {
                     var healthy = await checkFunc.Invoke(context.RequestServices);
                     if (healthy)
                     {
-                        context.Response.StatusCode = 200;
+                        context.Response.StatusCode = StatusCodes.Status200OK;
                         await context.Response.WriteAsync("healthy");
                     }
                     else
                     {
-                        context.Response.StatusCode = 400;
+                        context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
                         await context.Response.WriteAsync("unhealthy");
                     }
                 }));
