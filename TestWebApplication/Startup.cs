@@ -49,14 +49,14 @@ namespace TestWebApplication
             //    config.CachePrefix = "AspNetCorePlayground";
             //    config.DefaultDatabase = 2;
             //});
-            //var configuration = new ConfigurationBuilder()
-            //    .AddConfiguration(Configuration)
-            //    .AddRedis(action =>
-            //    {
-            //        action.Services = services;
-            //        action.RedisConfigurationKey = "Configurations";
-            //    })
-            //    .Build();
+            var configuration = new ConfigurationBuilder()
+                .AddConfiguration(Configuration)
+                //.AddRedis(action =>
+                //{
+                //    action.Services = services;
+                //    action.RedisConfigurationKey = "Configurations";
+                //})
+                .Build();
 
             //// testConfiguration
             //var rootUser = configuration["RootUser"];

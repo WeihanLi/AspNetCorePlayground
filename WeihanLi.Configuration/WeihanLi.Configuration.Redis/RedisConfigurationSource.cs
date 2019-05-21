@@ -1,32 +1,16 @@
-﻿using System;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using WeihanLi.Redis;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace WeihanLi.Configuration.Redis
 {
     public class RedisConfigurationSource : IConfigurationSource
     {
-        public IServiceCollection Services { get; set; }
-        private readonly IServiceProvider _serviceProvider;
+        public string ConfigurationKey { get; set; } = "Configurations";
 
-        public string RedisConfigurationKey { get; set; }
-
-        public RedisConfigurationSource()
-        {
-        }
-
-        public RedisConfigurationSource(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
+        public string KeyDelimiter { get; set; } = ":";
 
         public IConfigurationProvider Build(IConfigurationBuilder builder)
         {
-            var option = _serviceProvider.GetRequiredService<IOptions<RedisConfigurationOptions>>();
-            var hashClient = _serviceProvider.GetRequiredService<IHashClient>();
-            return new RedisConfigurationProvider(hashClient, option);
+            return new RedisConfigurationProvider(ConfigurationKey, KeyDelimiter);
         }
     }
 }

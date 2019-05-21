@@ -1,30 +1,20 @@
 ﻿using System.Linq;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using WeihanLi.Common;
 using WeihanLi.Redis;
 
 namespace WeihanLi.Configuration.Redis
 {
     internal class RedisConfigurationProvider : ConfigurationProvider
     {
-        private readonly IHashClient _hashClient;
-        private readonly RedisConfigurationOptions _redisOptions;
-        private readonly string _configurationHashKey = "Configurations";
+        private readonly string _configurationHashKey;
+        private readonly string _keyDelimiter;
 
-        public RedisConfigurationProvider(IHashClient hashClient, IOptions<RedisConfigurationOptions> redisOptions)
+        public RedisConfigurationProvider(string configurationKey, string keyDelimiter)
         {
-            _hashClient = hashClient;
-            _redisOptions = redisOptions.Value;
-        }
-
-        public RedisConfigurationProvider(IHashClient hashClient, IOptions<RedisConfigurationOptions> redisOptions, string configurationKey)
-        {
-            _hashClient = hashClient;
-            _redisOptions = redisOptions.Value;
-            if (!string.IsNullOrWhiteSpace(configurationKey))
-            {
-                _configurationHashKey = configurationKey;
-            }
+            _configurationHashKey = configurationKey;
+            _keyDelimiter = keyDelimiter;
         }
 
         /// <summary>
@@ -32,13 +22,14 @@ namespace WeihanLi.Configuration.Redis
         /// </summary>
         public override void Load()
         {
-            var keys = _hashClient.Keys(_configurationHashKey);
+            var hashClient = DependencyResolver.Current.GetRequiredService<IHashClient>();
+            var keys = hashClient.Keys(_configurationHashKey);
             if (keys.Length == 0)
                 return;
 
             var configurations = keys
-                .ToDictionary(_ => _, _ => _hashClient.Get(_configurationHashKey, _));
-            if (_redisOptions.KeySeparator == ConfigurationPath.KeyDelimiter)
+                .ToDictionary(_ => _, _ => hashClient.Get(_configurationHashKey, _));
+            if (_keyDelimiter == ConfigurationPath.KeyDelimiter)
             {
                 foreach (var entry in configurations)
                 {
@@ -49,7 +40,7 @@ namespace WeihanLi.Configuration.Redis
             {
                 foreach (var entry in configurations)
                 {
-                    Data[entry.Key] = entry.Value.Replace(_redisOptions.KeySeparator, ConfigurationPath.KeyDelimiter);
+                    Data[entry.Key.Replace(_keyDelimiter, ConfigurationPath.KeyDelimiter)] = entry.Value;
                 }
             }
         }
