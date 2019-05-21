@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Ocelot.Configuration.File;
 using Ocelot.Configuration.Repository;
@@ -16,19 +17,20 @@ namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework
     internal class EntityFrameworkConfigurationRepository : IFileConfigurationRepository
     {
         private readonly IServiceProvider _serviceProvider;
-        internal static int SpecificConfigurationId = -1;
+        private readonly EFConfigurationRepositoryOptions _configurationRepositoryOptions;
 
-        public EntityFrameworkConfigurationRepository(IServiceProvider serviceProvider)
+        public EntityFrameworkConfigurationRepository(IServiceProvider serviceProvider, IOptions<EFConfigurationRepositoryOptions> options)
         {
             _serviceProvider = serviceProvider;
+            _configurationRepositoryOptions = options.Value;
         }
 
         public async Task<Response<FileConfiguration>> Get()
         {
             Expression<Func<OcelotConfiguration, bool>> expression = c => c.IsEnabled;
-            if (SpecificConfigurationId > 0)
+            if (_configurationRepositoryOptions.OcelotConfigurationId > 0)
             {
-                expression = c => c.IsEnabled && c.Id == SpecificConfigurationId;
+                expression = c => c.IsEnabled && c.Id == _configurationRepositoryOptions.OcelotConfigurationId;
             }
 
             OcelotConfiguration configuration;
@@ -113,6 +115,7 @@ namespace WeihanLi.Ocelot.ConfigurationProvider.EntityFramework
             }
             return new OkResponse<FileConfiguration>(fileConfiguration);
         }
+
         public Task<Response> Set(FileConfiguration fileConfiguration)
         {
             return Task.FromResult((Response)new OkResponse());

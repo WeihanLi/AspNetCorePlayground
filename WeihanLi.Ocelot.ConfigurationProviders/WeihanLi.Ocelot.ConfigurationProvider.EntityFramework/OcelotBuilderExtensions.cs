@@ -10,19 +10,37 @@ namespace Ocelot.DependencyInjection
     public static class OcelotBuilderExtensions
     {
         /// <summary>
-        /// StoreConfigurationInEntityFramework
+        /// Store OcelotConfiguration in EntityFramework
         /// </summary>
         /// <param name="builder">the OcelotBuilder</param>
         /// <param name="optionsAction">Ocelot DbContext optionsAction</param>
-        /// <param name="configurationId">configurationId</param>
         /// <returns>the OcelotBuilder</returns>
-        public static IOcelotBuilder StoreConfigurationInEntityFramework(this IOcelotBuilder builder, Action<DbContextOptionsBuilder> optionsAction, int configurationId = -1)
+        public static IOcelotBuilder StoreConfigurationInEntityFramework(this IOcelotBuilder builder,
+            Action<DbContextOptionsBuilder> optionsAction)
         {
-            EntityFrameworkConfigurationRepository.SpecificConfigurationId = configurationId;
-
-            builder.Services.AddDbContextPool<OcelotDbContext>(optionsAction, poolSize: 64); // dbContextPool size tip https://www.cnblogs.com/dudu/p/10398225.html
+            builder.Services.AddDbContextPool<OcelotDbContext>(optionsAction, poolSize: 100); // dbContextPool size tip https://www.cnblogs.com/dudu/p/10398225.html
             builder.Services.AddSingleton<IFileConfigurationRepository, EntityFrameworkConfigurationRepository>();
 
+            return builder;
+        }
+
+        /// <summary>
+        /// Store OcelotConfiguration in EntityFramework
+        /// </summary>
+        /// <param name="builder">the OcelotBuilder</param>
+        /// <param name="optionsAction">Ocelot DbContext optionsAction</param>
+        /// <param name="repoOptionsAction">repoOptionsAction</param>
+        /// <returns>the OcelotBuilder</returns>
+        public static IOcelotBuilder StoreConfigurationInEntityFramework(this IOcelotBuilder builder,
+            Action<DbContextOptionsBuilder> optionsAction,
+            Action<EFConfigurationRepositoryOptions> repoOptionsAction)
+        {
+            if (null != repoOptionsAction)
+            {
+                builder.Services.Configure(repoOptionsAction);
+            }
+
+            builder.StoreConfigurationInEntityFramework(optionsAction);
             return builder;
         }
     }

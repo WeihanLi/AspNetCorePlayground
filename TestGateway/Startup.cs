@@ -39,8 +39,12 @@ namespace TestGateway
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+
             services.AddOcelot()
-                .StoreConfigurationInRedis();
+                //.StoreConfigurationInEntityFramework(options => options.UseSqlServer(Configuration.GetConnectionString("OcelotConfigurations")))
+                .StoreConfigurationInRedis()
+                ;
 
             services.AddRedisConfig(options =>
             {
@@ -100,7 +104,7 @@ namespace TestGateway
 
             #endregion 更新 Ocelot 配置接口
 
-            app.UseOcelot((ocelotBuilder, pipelineConfiguration) =>
+            app.UseOcelotWhenRouteMatch((ocelotBuilder, pipelineConfiguration) =>
                 {
                     // This is registered to catch any global exceptions that are not handled
                     // It also sets the Request Id if anything is set globally
@@ -132,8 +136,9 @@ namespace TestGateway
                         }
                         await next();
                     });
-                })
-                .Wait();
+                });
+
+            app.UseMvc();
         }
     }
 }

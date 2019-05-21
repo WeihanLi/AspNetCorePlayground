@@ -12,6 +12,7 @@ using Ocelot.Configuration.File;
 using Ocelot.Configuration.Repository;
 using Ocelot.Configuration.Setter;
 using Ocelot.DependencyInjection;
+using Ocelot.DownstreamRouteFinder.Finder;
 using Ocelot.Logging;
 using Ocelot.Middleware;
 using Ocelot.Middleware.Pipeline;
@@ -21,6 +22,44 @@ namespace TestGateway
 {
     public static class OcelotExtensions
     {
+        public static IApplicationBuilder UseOcelotWhenRouteMatch(this IApplicationBuilder app,
+            Action<IOcelotPipelineBuilder, OcelotPipelineConfiguration> builderAction)
+            => UseOcelotWhenRouteMatch(app, builderAction, new OcelotPipelineConfiguration());
+
+        public static IApplicationBuilder UseOcelotWhenRouteMatch(this IApplicationBuilder app,
+            Action<OcelotPipelineConfiguration> pipelineConfigurationAction,
+            Action<IOcelotPipelineBuilder, OcelotPipelineConfiguration> builderAction)
+        {
+            var pipelineConfiguration = new OcelotPipelineConfiguration();
+            pipelineConfigurationAction?.Invoke(pipelineConfiguration);
+            return UseOcelotWhenRouteMatch(app, builderAction, pipelineConfiguration);
+        }
+
+        public static IApplicationBuilder UseOcelotWhenRouteMatch(this IApplicationBuilder app, Action<IOcelotPipelineBuilder, OcelotPipelineConfiguration> builderAction, OcelotPipelineConfiguration configuration)
+        {
+            app.MapWhen(context =>
+            {
+                var internalConfigurationResponse =
+                    context.RequestServices.GetRequiredService<IInternalConfigurationRepository>().Get();
+                if (internalConfigurationResponse.IsError || internalConfigurationResponse.Data.ReRoutes.Count == 0)
+                {
+                    return false;
+                }
+
+                var internalConfiguration = internalConfigurationResponse.Data;
+                var downstreamRouteFinder = context.RequestServices
+                    .GetRequiredService<IDownstreamRouteProviderFactory>()
+                    .Get(internalConfiguration);
+                var response = downstreamRouteFinder.Get(context.Request.Path, context.Request.QueryString.ToString(),
+                    context.Request.Method, internalConfiguration, context.Request.Host.ToString());
+                return !response.IsError
+                       && !string.IsNullOrEmpty(response.Data?.ReRoute?.DownstreamReRoute?.FirstOrDefault()
+                           ?.DownstreamScheme);
+            }, appBuilder => appBuilder.UseOcelot(builderAction, configuration).Wait());
+
+            return app;
+        }
+
         public static Task<IApplicationBuilder> UseOcelot(this IApplicationBuilder app,
             Action<IOcelotPipelineBuilder, OcelotPipelineConfiguration> builderAction)
             => UseOcelot(app, builderAction, new OcelotPipelineConfiguration());
