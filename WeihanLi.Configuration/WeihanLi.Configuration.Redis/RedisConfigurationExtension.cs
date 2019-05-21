@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace WeihanLi.Configuration.Redis
 {
-    public static class RedisConfigurationExtension
+    internal static class RedisConfigurationExtension
     {
         /// <summary>
         /// Adds an <see cref="IConfigurationProvider"/> that reads configuration values from redis
