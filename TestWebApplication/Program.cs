@@ -17,10 +17,6 @@ namespace TestWebApplication
             WebHost.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostBuilder, configBuilder) =>
                 {
-                    //configBuilder.AddRedis(action =>
-                    //{
-                    //    action.ConfigurationKey = "Configurations";
-                    //});
                     configBuilder.AddJsonFile("abc.json", optional: true, reloadOnChange: false);
                 })
                 .UseRedisConfiguration(action =>
