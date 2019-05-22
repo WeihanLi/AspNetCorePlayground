@@ -71,6 +71,7 @@ namespace TestGateway
             {
                 appBuilder.Use(async (context, next) =>
                 {
+                    // WARN: this api should be protected with permissions
                     var configurationRepo =
                         context.RequestServices.GetRequiredService<IFileConfigurationRepository>();
                     var ocelotConfiguration = await configurationRepo.Get();
@@ -107,11 +108,6 @@ namespace TestGateway
                     // This is registered to catch any global exceptions that are not handled
                     // It also sets the Request Id if anything is set globally
                     ocelotBuilder.UseExceptionHandlerMiddleware();
-                    // Allow the user to respond with absolutely anything they want.
-                    if (pipelineConfiguration.PreErrorResponderMiddleware != null)
-                    {
-                        ocelotBuilder.Use(pipelineConfiguration.PreErrorResponderMiddleware);
-                    }
                     // This is registered first so it can catch any errors and issue an appropriate response
                     ocelotBuilder.UseResponderMiddleware();
                     ocelotBuilder.UseDownstreamRouteFinderMiddleware();
