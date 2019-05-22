@@ -10,7 +10,6 @@ namespace TestGateway.Controllers
         {
             return Ok(new
             {
-                UserName = User.Identity.Name,
                 Tick = DateTime.UtcNow.Ticks,
                 Msg = "Hello Ocelot",
             });
