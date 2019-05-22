@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
 using Ocelot.Cache.Middleware;
 using Ocelot.Configuration.Creator;
 using Ocelot.Configuration.Repository;
@@ -14,13 +13,12 @@ using Ocelot.DownstreamUrlCreator.Middleware;
 using Ocelot.Errors.Middleware;
 using Ocelot.Headers.Middleware;
 using Ocelot.LoadBalancer.Middleware;
-using Ocelot.Middleware;
 using Ocelot.Middleware.Pipeline;
 using Ocelot.Request.Middleware;
 using Ocelot.Requester.Middleware;
 using Ocelot.RequestId.Middleware;
 using Ocelot.Responder.Middleware;
-using WeihanLi.Extensions;
+using TestGateway.OcelotMiddlewares;
 using WeihanLi.Ocelot.ConfigurationProvider.Redis;
 using WeihanLi.Redis;
 
@@ -125,17 +123,7 @@ namespace TestGateway
                     ocelotBuilder.UseOutputCacheMiddleware();
                     ocelotBuilder.UseMiddleware<HttpRequesterMiddleware>();
                     // cors headers
-                    ocelotBuilder.Use(async (context, next) =>
-                    {
-                        if (!context.DownstreamResponse.Headers.Exists(h => h.Key == HeaderNames.AccessControlAllowOrigin))
-                        {
-                            var allowedOrigins = Configuration.GetAppSetting("AllowedOrigins").SplitArray<string>();
-                            context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlAllowOrigin, allowedOrigins.Length == 0 ? new[] { "*" } : allowedOrigins));
-                            context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlAllowHeaders, new[] { "*" }));
-                            context.DownstreamResponse.Headers.Add(new Header(HeaderNames.AccessControlRequestMethod, new[] { "*" }));
-                        }
-                        await next();
-                    });
+                    ocelotBuilder.UseMiddleware<CorsMiddleware>();
                 });
 
             app.UseMvc();
