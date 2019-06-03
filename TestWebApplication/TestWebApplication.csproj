@@ -15,8 +15,7 @@
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.1" />
-    <PackageReference Include="WeihanLi.Common" Version="1.0.19" />
+    <PackageReference Include="WeihanLi.Common" Version="1.0.20" />
   </ItemGroup>
 
   <ItemGroup>
