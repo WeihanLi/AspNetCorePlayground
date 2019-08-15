@@ -49,9 +49,6 @@ namespace TestGateway
             services.AddAuthentication()
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                     {
-                        options.ClaimsIssuer = "AliceGateway";
-                        options.Audience = "wt";
-
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             // The signing key must match!
