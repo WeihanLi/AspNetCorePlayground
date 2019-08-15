@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
+using Ocelot.Authentication.Middleware;
+using Ocelot.Authorisation.Middleware;
 using Ocelot.Cache.Middleware;
 using Ocelot.Configuration.Creator;
 using Ocelot.Configuration.Repository;
@@ -38,6 +43,32 @@ namespace TestGateway
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            var tokenOptions = new JwtTokenOptions();
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(tokenOptions.SecretKey));
+            services.AddAuthentication()
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                    {
+                        options.ClaimsIssuer = "AliceGateway";
+                        options.Audience = "wt";
+
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            // The signing key must match!
+                            ValidateIssuerSigningKey = true,
+                            IssuerSigningKey = signingKey,
+                            // Validate the JWT Issuer (iss) claim
+                            ValidateIssuer = true,
+                            ValidIssuer = tokenOptions.Issuer,
+                            // Validate the JWT Audience (aud) claim
+                            ValidateAudience = true,
+                            ValidAudience = tokenOptions.Audience,
+                            // Validate the token expiry
+                            ValidateLifetime = true,
+                            // If you want to allow a certain amount of clock drift, set that here:
+                            ClockSkew = System.TimeSpan.Zero
+                        };
+                    });
 
             services.AddOcelot()
                 //.StoreConfigurationInEntityFramework(options => options.UseSqlServer(Configuration.GetConnectionString("OcelotConfigurations")))
@@ -114,6 +145,8 @@ namespace TestGateway
                     ocelotBuilder.UseDownstreamRequestInitialiser();
                     ocelotBuilder.UseRequestIdMiddleware();
                     ocelotBuilder.UseMiddleware<ClaimsToHeadersMiddleware>();
+                    ocelotBuilder.UseAuthorisationMiddleware();
+                    ocelotBuilder.UseAuthenticationMiddleware();
                     ocelotBuilder.UseLoadBalancingMiddleware();
                     ocelotBuilder.UseDownstreamUrlCreatorMiddleware();
                     ocelotBuilder.UseOutputCacheMiddleware();

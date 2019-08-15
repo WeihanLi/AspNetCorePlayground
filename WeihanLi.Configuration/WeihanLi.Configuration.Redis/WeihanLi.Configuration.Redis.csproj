@@ -7,7 +7,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Hosting.Abstractions" Version="2.1.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.0" />
-    <PackageReference Include="WeihanLi.Redis" Version="1.5.3" />
+    <PackageReference Include="WeihanLi.Redis" Version="1.5.6.8" />
   </ItemGroup>
 
 </Project>
