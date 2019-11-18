@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WeihanLi.Redis" Version="1.5.6.8" />
+    <PackageReference Include="WeihanLi.Redis" Version="1.5.7" />
     <PackageReference Include="Ocelot" Version="13.5.0" />
   </ItemGroup>
 </Project>

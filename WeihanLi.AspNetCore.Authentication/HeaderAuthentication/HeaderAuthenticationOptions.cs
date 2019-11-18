@@ -47,7 +47,7 @@ namespace WeihanLi.AspNetCore.Authentication.HeaderAuthentication
         }
 
         /// <summary>
-        /// 自定义其他的 header
+        /// AdditionalHeaderToClaims
         /// key: headerName
         /// value: claimType
         /// </summary>

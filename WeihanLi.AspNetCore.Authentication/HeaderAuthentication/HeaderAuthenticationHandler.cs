@@ -18,7 +18,7 @@ namespace WeihanLi.AspNetCore.Authentication.HeaderAuthentication
 
         protected override Task<AuthenticateResult> HandleAuthenticateAsync()
         {
-            if (!Request.Headers.ContainsKey(Options.UserIdHeaderName) || !Request.Headers.ContainsKey(Options.UserNameHeaderName))
+            if (!Request.Headers.ContainsKey(Options.UserIdHeaderName))
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
