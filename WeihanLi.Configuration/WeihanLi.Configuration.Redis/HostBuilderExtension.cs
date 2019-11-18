@@ -10,7 +10,7 @@ namespace WeihanLi.Configuration.Redis
     public static class WebHostBuilderExtension
     {
         public static IWebHostBuilder UseRedisConfiguration(this IWebHostBuilder webHostBuilder,
-            Action<RedisConfigurationOptions> redisOptions,
+            Action<IConfiguration, RedisConfigurationOptions> redisOptionsAction,
             Action<RedisConfigurationSource> configAction = null)
         {
             webHostBuilder.ConfigureServices((builderContext, services) =>
@@ -19,7 +19,7 @@ namespace WeihanLi.Configuration.Redis
                 {
                     configAction = src => { };
                 }
-                services.AddRedisConfig(redisOptions);
+                services.AddRedisConfig(builderContext.Configuration, redisOptionsAction);
                 var configurationBuilder = new ConfigurationBuilder();
                 configurationBuilder.AddConfiguration(builderContext.Configuration);
                 configurationBuilder.AddRedis(configAction);

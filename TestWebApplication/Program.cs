@@ -19,12 +19,12 @@ namespace TestWebApplication
                 {
                     configBuilder.AddJsonFile("abc.json", optional: true, reloadOnChange: false);
                 })
-                .UseRedisConfiguration(action =>
+                .UseRedisConfiguration((configuration, action) =>
                 {
                     action.CachePrefix = "AspNetCorePlayground";
                     action.RedisServers = new[]
                     {
-                        new RedisServerConfiguration("127.0.0.1", 6379),
+                        new RedisServerConfiguration( configuration.GetConnectionString("Redis") ?? "127.0.0.1", 6379),
                     };
                     action.DefaultDatabase = 2;
                 })
