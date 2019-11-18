@@ -1,5 +1,6 @@
 ﻿using System.Data.SqlClient;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,11 +8,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestWebApplication.Conventions;
-using TestWebApplication.Extensions;
 using WeihanLi.AspNetCore.Authentication;
 using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
 using WeihanLi.AspNetCore.Authentication.QueryAuthentication;
 using WeihanLi.Extensions;
+using WeihanLi.Web.Extensions;
 
 namespace TestWebApplication
 {
@@ -32,10 +33,23 @@ namespace TestWebApplication
                 .AddQuery(QueryAuthenticationDefaults.AuthenticationSchema, options => { options.AdditionalQueryToClaims.Add("UserEmail", ClaimTypes.Email); })
                 ;
 
+            var anonymousPolicyName = "anonymous";
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(anonymousPolicyName, builder => builder.RequireAssertion(context => context.User.Identity.IsAuthenticated));
+
+                options.DefaultPolicy = new AuthorizationPolicyBuilder(HeaderAuthenticationDefaults.AuthenticationSchema)
+                    .RequireAuthenticatedUser()
+                    .RequireAssertion(context => context.User.GetUserId<int>() > 0)
+                    .Build();
+            });
+
             services.AddMvc(options =>
                 {
                     options.Conventions.Add(new ApiControllerVersionConvention());
                 })
+                .AddAnonymousPolicyTransformer(anonymousPolicyName)
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddApiVersioning(options =>
@@ -53,7 +67,7 @@ namespace TestWebApplication
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHealthCheck("/health", serviceProvider =>
+            HealthCheckExtensions.UseHealthCheck(app, "/health", serviceProvider =>
                 {
                     // 检查数据库访问是否正常
                     var configuration = serviceProvider.GetService<IConfiguration>();

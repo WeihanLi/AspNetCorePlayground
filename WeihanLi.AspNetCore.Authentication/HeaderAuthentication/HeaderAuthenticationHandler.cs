@@ -23,23 +23,21 @@ namespace WeihanLi.AspNetCore.Authentication.HeaderAuthentication
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
             var userId = Request.Headers[Options.UserIdHeaderName].ToString();
-            var userName = Request.Headers[Options.UserNameHeaderName].ToString();
-            var userRoles = new string[0];
-            if (Request.Headers.ContainsKey(Options.UserRolesHeaderName))
-            {
-                userRoles = Request.Headers[Options.UserRolesHeaderName].ToString()
-                    .Split(new[] { Options.Delimiter }, StringSplitOptions.RemoveEmptyEntries);
-            }
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Name, userName),
             };
-
-            if (userRoles.Length > 0)
+            if (Request.Headers.ContainsKey(Options.UserNameHeaderName))
             {
+                claims.Add(new Claim(ClaimTypes.Name, Request.Headers[Options.UserNameHeaderName].ToString()));
+            }
+            if (Request.Headers.ContainsKey(Options.UserRolesHeaderName))
+            {
+                var userRoles = Request.Headers[Options.UserRolesHeaderName].ToString()
+                    .Split(new[] { Options.Delimiter }, StringSplitOptions.RemoveEmptyEntries);
                 claims.AddRange(userRoles.Select(r => new Claim(ClaimTypes.Role, r)));
             }
+
             if (Options.AdditionalHeaderToClaims.Count > 0)
             {
                 foreach (var headerToClaim in Options.AdditionalHeaderToClaims)
@@ -53,6 +51,7 @@ namespace WeihanLi.AspNetCore.Authentication.HeaderAuthentication
                     }
                 }
             }
+
             // claims identity 's authentication type can not be null https://stackoverflow.com/questions/45261732/user-identity-isauthenticated-always-false-in-net-core-custom-authentication
             var principal = new ClaimsPrincipal(new ClaimsIdentity(claims, Scheme.Name));
             var ticket = new AuthenticationTicket(

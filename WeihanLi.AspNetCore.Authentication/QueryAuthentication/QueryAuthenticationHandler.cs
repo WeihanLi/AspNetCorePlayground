@@ -22,26 +22,24 @@ namespace WeihanLi.AspNetCore.Authentication.QueryAuthentication
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
-            if (!Request.Query.ContainsKey(Options.UserIdQueryKey) || !Request.Query.ContainsKey(Options.UserNameQueryKey))
+            if (!Request.Query.ContainsKey(Options.UserIdQueryKey))
             {
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
             var userId = Request.Query[Options.UserIdQueryKey].ToString();
-            var userName = Request.Query[Options.UserNameQueryKey].ToString();
-            var userRoles = new string[0];
-            if (Request.Query.ContainsKey(Options.UserRolesQueryKey))
-            {
-                userRoles = Request.Query[Options.UserRolesQueryKey].ToString()
-                    .Split(new[] { Options.Delimiter }, StringSplitOptions.RemoveEmptyEntries);
-            }
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, userId),
-                new Claim(ClaimTypes.Name, userName),
             };
-
-            if (userRoles.Length > 0)
+            if (Request.Query.ContainsKey(Options.UserNameQueryKey))
             {
+                var userName = Request.Query[Options.UserNameQueryKey].ToString();
+                claims.Add(new Claim(ClaimTypes.Name, userName));
+            }
+            if (Request.Query.ContainsKey(Options.UserRolesQueryKey))
+            {
+                var userRoles = Request.Query[Options.UserRolesQueryKey].ToString()
+                    .Split(new[] { Options.Delimiter }, StringSplitOptions.RemoveEmptyEntries);
                 claims.AddRange(userRoles.Select(r => new Claim(ClaimTypes.Role, r)));
             }
             if (Options.AdditionalQueryToClaims.Count > 0)
