@@ -2,6 +2,6 @@
 {
     public static class QueryAuthenticationDefaults
     {
-        public const string AuthenticationSchema = " QUERY";
+        public const string AuthenticationSchema = " Query";
     }
 }

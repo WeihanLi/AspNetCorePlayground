@@ -10,6 +10,7 @@ using TestWebApplication.Conventions;
 using TestWebApplication.Extensions;
 using WeihanLi.AspNetCore.Authentication;
 using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
+using WeihanLi.AspNetCore.Authentication.QueryAuthentication;
 using WeihanLi.Extensions;
 
 namespace TestWebApplication
@@ -28,7 +29,7 @@ namespace TestWebApplication
         {
             services.AddAuthentication(HeaderAuthenticationDefaults.AuthenticationSchema)
                 .AddHeader(HeaderAuthenticationDefaults.AuthenticationSchema, options => { options.AdditionalHeaderToClaims.Add("UserEmail", ClaimTypes.Email); })
-                //.AddQuery(QueryAuthenticationDefaults.AuthenticationSchema, options => { options.AdditionalQueryToClaims.Add("UserEmail", ClaimTypes.Email); })
+                .AddQuery(QueryAuthenticationDefaults.AuthenticationSchema, options => { options.AdditionalQueryToClaims.Add("UserEmail", ClaimTypes.Email); })
                 ;
 
             services.AddMvc(options =>

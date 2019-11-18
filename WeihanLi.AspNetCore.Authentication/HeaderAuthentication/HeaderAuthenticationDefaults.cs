@@ -2,6 +2,6 @@
 {
     public static class HeaderAuthenticationDefaults
     {
-        public const string AuthenticationSchema = "HEADER";
+        public const string AuthenticationSchema = "Header";
     }
 }
