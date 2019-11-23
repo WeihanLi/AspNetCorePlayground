@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TestWebApplication.Conventions;
+using TestWebApplication.Event;
 using WeihanLi.AspNetCore.Authentication;
 using WeihanLi.AspNetCore.Authentication.HeaderAuthentication;
 using WeihanLi.AspNetCore.Authentication.QueryAuthentication;
@@ -57,17 +58,22 @@ namespace TestWebApplication
                 options.AssumeDefaultVersionWhenUnspecified = true;
                 options.DefaultApiVersion = ApiVersion.Default;
             });
+
+            services.AddEvent();
+            services.AddSingleton<PageViewEventHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IEventSubscriptionManager eventSubscriptionManager)
         {
+            eventSubscriptionManager.Subscribe<PageViewEvent, PageViewEventHandler>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
 
-            HealthCheckExtensions.UseHealthCheck(app, "/health", serviceProvider =>
+            app.UseHealthCheck("/health", serviceProvider =>
                 {
                     // 检查数据库访问是否正常
                     var configuration = serviceProvider.GetService<IConfiguration>();
@@ -79,6 +85,12 @@ namespace TestWebApplication
                     return true;
                 });
 
+            app.Use(async (context, next) =>
+            {
+                var eventPublisher = context.RequestServices.GetRequiredService<IEventPublisher>();
+                await eventPublisher.Publish("pageView", new PageViewEvent() { Path = context.Request.Path.Value });
+                await next();
+            });
             app.UseAuthentication();
             app.UseMvc();
         }
