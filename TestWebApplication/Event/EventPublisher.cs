@@ -10,12 +10,6 @@ namespace TestWebApplication.Event
             where TEventHandler : IEventHandler<TEvent>;
     }
 
-    public interface IEventPublisher
-    {
-        Task Publish<TEvent>(string queueName, TEvent @event)
-            where TEvent : EventBase;
-    }
-
     public class EventSubscriptionManager : IEventSubscriptionManager
     {
         private readonly EventStore _eventStore;
@@ -31,6 +25,12 @@ namespace TestWebApplication.Event
         {
             _eventStore.Add<TEvent, TEventHandler>();
         }
+    }
+
+    public interface IEventPublisher
+    {
+        Task Publish<TEvent>(string queueName, TEvent @event)
+            where TEvent : EventBase;
     }
 
     public class EventPublisher : IEventPublisher
