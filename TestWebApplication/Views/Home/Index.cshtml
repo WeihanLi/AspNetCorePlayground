@@ -1,0 +1,17 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@using TestWebApplication.Controllers
+@inject IHtmlLocalizer<HomeController> HtmlLocalizer
+@inject IStringLocalizer<HomeController> StringLocalizer
+@inject IViewLocalizer ViewLocalizer
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<div>string: @StringLocalizer["HtmlTest"]</div>
+
+<div>html: @HtmlLocalizer["HtmlTest"]</div>
+
+<div>view: @ViewLocalizer["HtmlTest"]</div>

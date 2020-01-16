@@ -1,8 +1,9 @@
 ﻿using System.Data.SqlClient;
+using System.Globalization;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,21 +37,22 @@ namespace TestWebApplication
 
             var anonymousPolicyName = "anonymous";
 
-            services.AddAuthorization(options =>
-            {
-                options.AddPolicy(anonymousPolicyName, builder => builder.RequireAssertion(context => context.User.Identity.IsAuthenticated));
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy(anonymousPolicyName, builder => builder.RequireAssertion(context => context.User.Identity.IsAuthenticated));
 
-                options.DefaultPolicy = new AuthorizationPolicyBuilder(HeaderAuthenticationDefaults.AuthenticationSchema)
-                    .RequireAuthenticatedUser()
-                    .RequireAssertion(context => context.User.GetUserId<int>() > 0)
-                    .Build();
-            });
+            //    options.DefaultPolicy = new AuthorizationPolicyBuilder(HeaderAuthenticationDefaults.AuthenticationSchema)
+            //        .RequireAuthenticatedUser()
+            //        .RequireAssertion(context => context.User.GetUserId<int>() > 0)
+            //        .Build();
+            //});
 
             services.AddMvc(options =>
                 {
                     options.Conventions.Add(new ApiControllerVersionConvention());
                 })
-                .AddAnonymousPolicyTransformer(anonymousPolicyName)
+                // .AddAnonymousPolicyTransformer(anonymousPolicyName)
+                .AddViewLocalization(options => options.ResourcesPath = "Resources")
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddApiVersioning(options =>
@@ -61,6 +63,8 @@ namespace TestWebApplication
 
             services.AddEvent();
             services.AddSingleton<PageViewEventHandler>();
+
+            services.AddLocalization(options => { options.ResourcesPath = "Resources"; });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -85,14 +89,29 @@ namespace TestWebApplication
                     return true;
                 });
 
-            app.Use(async (context, next) =>
+            //app.Use(async (context, next) =>
+            //{
+            //    var eventPublisher = context.RequestServices.GetRequiredService<IEventPublisher>();
+            //    await eventPublisher.Publish("pageView", new PageViewEvent() { Path = context.Request.Path.Value });
+            //    await next();
+            //});
+
+            var supportedCultures = new[]
             {
-                var eventPublisher = context.RequestServices.GetRequiredService<IEventPublisher>();
-                await eventPublisher.Publish("pageView", new PageViewEvent() { Path = context.Request.Path.Value });
-                await next();
+                new CultureInfo("zh"),
+                new CultureInfo("en"),
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("zh"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
             });
+
             app.UseAuthentication();
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
