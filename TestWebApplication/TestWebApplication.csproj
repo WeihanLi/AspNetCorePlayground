@@ -9,7 +9,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.10" />
-    <PackageReference Include="WeihanLi.Common" Version="1.0.31" />
+    <PackageReference Include="WeihanLi.Common" Version="1.0.34" />
     <PackageReference Include="WeihanLi.Web.Extensions" Version="1.0.0" />
   </ItemGroup>
 
