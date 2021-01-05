@@ -40,6 +40,30 @@ namespace OcelotDemo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            //app.UseOcelot(configuration =>
+            //{
+            //    configuration.PreAuthorizationMiddleware = (ctx, next) =>
+            //    {
+            //        if (!ctx.User.Claims.Any())
+            //        {
+            //            ctx.Items.SetError(new UnauthorizedError(""));
+            //            return next();
+            //        }
+
+            //        int.TryParse(ctx.User.Claims.FirstOrDefault(p => p.Type.Contains("RoleId"))
+            //            ?.Value, out var roleId);
+            //        if (roleId == 1)
+            //        {
+            //            //ctx.Items.SetError(new UnauthorizedError("roleId 为 1 没有权限访问"));
+            //            //return next();
+
+            //            ctx.Response.StatusCode = 403;
+            //            return ctx.Response.WriteAsync("roleId 为 1 没有权限访问");
+            //        }
+            //        return next();
+            //    };
+            //});
+
             app.UseOcelot((ocelotBuilder, ocelotConfiguration) =>
             {
                 // this sets up the downstream context and gets the config
