@@ -52,13 +52,15 @@ namespace OcelotDemo
 
             //        int.TryParse(ctx.User.Claims.FirstOrDefault(p => p.Type.Contains("RoleId"))
             //            ?.Value, out var roleId);
-            //        if (roleId == 1)
+            //        if (roleId == 0)
             //        {
             //            //ctx.Items.SetError(new UnauthorizedError("roleId 为 1 没有权限访问"));
             //            //return next();
 
+            //            var ds = ctx.Items.DownstreamResponse();
+
             //            ctx.Response.StatusCode = 403;
-            //            return ctx.Response.WriteAsync("roleId 为 1 没有权限访问");
+            //            return ctx.Response.WriteAsync("没有权限访问");
             //        }
             //        return next();
             //    };
