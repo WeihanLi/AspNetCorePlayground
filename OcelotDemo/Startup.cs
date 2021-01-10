@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Ocelot.Cache.Middleware;
 using Ocelot.DependencyInjection;
 using Ocelot.DownstreamRouteFinder.Middleware;
 using Ocelot.DownstreamUrlCreator.Middleware;
@@ -42,27 +41,10 @@ namespace OcelotDemo
         {
             //app.UseOcelot(configuration =>
             //{
-            //    configuration.PreAuthorizationMiddleware = (ctx, next) =>
+            //    configuration.PreAuthenticationMiddleware = (ctx, next) =>
             //    {
-            //        if (!ctx.User.Claims.Any())
-            //        {
-            //            ctx.Items.SetError(new UnauthorizedError(""));
-            //            return next();
-            //        }
-
-            //        int.TryParse(ctx.User.Claims.FirstOrDefault(p => p.Type.Contains("RoleId"))
-            //            ?.Value, out var roleId);
-            //        if (roleId == 0)
-            //        {
-            //            //ctx.Items.SetError(new UnauthorizedError("roleId 为 1 没有权限访问"));
-            //            //return next();
-
-            //            var ds = ctx.Items.DownstreamResponse();
-
-            //            ctx.Response.StatusCode = 403;
-            //            return ctx.Response.WriteAsync("没有权限访问");
-            //        }
-            //        return next();
+            //        ctx.Response.StatusCode = 401;
+            //        return ctx.Response.WriteAsync("Nobody could access");
             //    };
             //});
 
@@ -83,7 +65,6 @@ namespace OcelotDemo
                 ocelotBuilder.UseMiddleware<UrlBasedAuthenticationMiddleware>();
                 ocelotBuilder.UseLoadBalancingMiddleware();
                 ocelotBuilder.UseDownstreamUrlCreatorMiddleware();
-                ocelotBuilder.UseOutputCacheMiddleware();
                 ocelotBuilder.UseHttpRequesterMiddleware();
             }).Wait();
         }
