@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Ocelot.Authorization;
 using Ocelot.DependencyInjection;
 using Ocelot.DownstreamRouteFinder.Middleware;
 using Ocelot.DownstreamUrlCreator.Middleware;
@@ -12,7 +14,6 @@ using Ocelot.Multiplexer;
 using Ocelot.Request.Middleware;
 using Ocelot.Requester.Middleware;
 using Ocelot.RequestId.Middleware;
-using Ocelot.Responder.Middleware;
 using OcelotDemo.OcelotMiddleware;
 using WeihanLi.Web.Authentication;
 using WeihanLi.Web.Authentication.QueryAuthentication;
@@ -43,8 +44,8 @@ namespace OcelotDemo
             //{
             //    configuration.PreAuthenticationMiddleware = (ctx, next) =>
             //    {
-            //        ctx.Response.StatusCode = 401;
-            //        return ctx.Response.WriteAsync("Nobody could access");
+            //        ctx.Items.SetError(new UnauthorizedError("No permission"));
+            //        return Task.CompletedTask;
             //    };
             //});
 
@@ -55,14 +56,23 @@ namespace OcelotDemo
                 // This is registered to catch any global exceptions that are not handled
                 // It also sets the Request Id if anything is set globally
                 ocelotBuilder.UseExceptionHandlerMiddleware();
+
                 // This is registered first so it can catch any errors and issue an appropriate response
-                ocelotBuilder.UseResponderMiddleware();
+                //ocelotBuilder.UseResponderMiddleware();
+                ocelotBuilder.UseMiddleware<CustomResponseMiddleware>();
+
                 ocelotBuilder.UseDownstreamRouteFinderMiddleware();
                 ocelotBuilder.UseMultiplexingMiddleware();
                 ocelotBuilder.UseDownstreamRequestInitialiser();
                 ocelotBuilder.UseRequestIdMiddleware();
 
-                ocelotBuilder.UseMiddleware<UrlBasedAuthenticationMiddleware>();
+                ocelotBuilder.Use((ctx, next) =>
+                {
+                    ctx.Items.SetError(new UnauthorizedError("No permission"));
+                    return Task.CompletedTask;
+                });
+                //ocelotBuilder.UseMiddleware<UrlBasedAuthenticationMiddleware>();
+
                 ocelotBuilder.UseLoadBalancingMiddleware();
                 ocelotBuilder.UseDownstreamUrlCreatorMiddleware();
                 ocelotBuilder.UseHttpRequesterMiddleware();
