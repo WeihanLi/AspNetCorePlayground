@@ -1,19 +1,26 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Ocelot.Authorization;
+using Ocelot.Claims.Middleware;
 using Ocelot.DependencyInjection;
+using Ocelot.DownstreamPathManipulation.Middleware;
 using Ocelot.DownstreamRouteFinder.Middleware;
 using Ocelot.DownstreamUrlCreator.Middleware;
 using Ocelot.Errors.Middleware;
+using Ocelot.Headers.Middleware;
 using Ocelot.LoadBalancer.Middleware;
 using Ocelot.Middleware;
 using Ocelot.Multiplexer;
+using Ocelot.QueryStrings.Middleware;
+using Ocelot.RateLimit.Middleware;
 using Ocelot.Request.Middleware;
 using Ocelot.Requester.Middleware;
 using Ocelot.RequestId.Middleware;
+using Ocelot.Security.Middleware;
 using OcelotDemo.OcelotMiddleware;
 using WeihanLi.Web.Authentication;
 using WeihanLi.Web.Authentication.QueryAuthentication;
@@ -48,8 +55,8 @@ namespace OcelotDemo
             //        return Task.CompletedTask;
             //    };
             //});
-
-            app.UseOcelot((ocelotBuilder, ocelotConfiguration) =>
+            // https://github.com/ThreeMammals/Ocelot/blob/17.0.0/src/Ocelot/Middleware/OcelotPipelineExtensions.cs
+            app.UseOcelot((ocelotBuilder, pipelineConfiguration) =>
             {
                 // this sets up the downstream context and gets the config
                 app.UseDownstreamContextMiddleware();
@@ -63,20 +70,57 @@ namespace OcelotDemo
 
                 ocelotBuilder.UseDownstreamRouteFinderMiddleware();
                 ocelotBuilder.UseMultiplexingMiddleware();
+
+                // This security module, IP whitelist blacklist, extended security mechanism
+                ocelotBuilder.UseSecurityMiddleware();
+
+                ocelotBuilder.UseHttpHeadersTransformationMiddleware();
+
                 ocelotBuilder.UseDownstreamRequestInitialiser();
+
+                // We check whether the request is ratelimit, and if there is no continue processing
+                ocelotBuilder.UseRateLimiting();
+
                 ocelotBuilder.UseRequestIdMiddleware();
 
-                ocelotBuilder.Use((ctx, next) =>
-                {
-                    ctx.Items.SetError(new UnauthorizedError("No permission"));
-                    return Task.CompletedTask;
-                });
-                //ocelotBuilder.UseMiddleware<UrlBasedAuthenticationMiddleware>();
+                // ocelotBuilder.Use((ctx, next) =>
+                // {
+                //     ctx.Items.SetError(new UnauthorizedError("No permission"));
+                //     return Task.CompletedTask;
+                // });
+
+                ocelotBuilder.UseMiddleware<UrlBasedAuthenticationMiddleware>();
+
+                // The next thing we do is look at any claims transforms in case this is important for authorization
+                ocelotBuilder.UseClaimsToClaimsMiddleware();
+
+                // Now we can run the claims to headers transformation middleware
+                ocelotBuilder.UseClaimsToHeadersMiddleware();
+
+                // Allow the user to implement their own query string manipulation logic
+                ocelotBuilder.UseIfNotNull(pipelineConfiguration.PreQueryStringBuilderMiddleware);
+
+                // Now we can run any claims to query string transformation middleware
+                ocelotBuilder.UseClaimsToQueryStringMiddleware();
+
+                ocelotBuilder.UseClaimsToDownstreamPathMiddleware();
 
                 ocelotBuilder.UseLoadBalancingMiddleware();
                 ocelotBuilder.UseDownstreamUrlCreatorMiddleware();
                 ocelotBuilder.UseHttpRequesterMiddleware();
             }).Wait();
+        }
+    }
+
+    public static class Extensions
+    {
+        public static void UseIfNotNull(this IApplicationBuilder builder,
+            Func<HttpContext, Func<Task>, Task> middleware)
+        {
+            if (middleware != null)
+            {
+                builder.Use(middleware);
+            }
         }
     }
 }
