@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -40,7 +41,22 @@ namespace OcelotDemo
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication(QueryAuthenticationDefaults.AuthenticationSchema)
-                .AddQuery();
+                .AddCustomJwt(
+                    JwtBearerDefaults.AuthenticationScheme,
+                    Configuration.GetSection("AuthenticationBearerOptions")
+                )
+                .AddQuery()
+                //.AddJwtBearer(x =>
+                //{
+                //    x.RequireHttpsMetadata = false;
+                //    x.Authority = "";
+                //    x.TokenValidationParameters = new TokenValidationParameters()
+                //    {
+                //        ValidateAudience = false,
+                //        ClockSkew = TimeSpan.Zero,
+                //    };
+                //})
+                ;
             services.AddOcelot();
         }
 
